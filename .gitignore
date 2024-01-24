@@ -1,0 +1,16 @@
+.idea/
+*.pyc
+replays/
+venv/
+/**/generated/**/*.py
+output
+.env
+.coverage
+*.iml
+build/
+carball.egg*
+dist/
+*ipynb*
+
+!/carball/tests/replays/
+.vscode
