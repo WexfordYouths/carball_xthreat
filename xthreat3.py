@@ -28,6 +28,7 @@ import matplotlib.lines as lines
 import pandas as pd
 import numpy as np
 import os
+import subprocess
 
 def find_team_colour(team_name, d):
    for team in d["teams"]:
@@ -153,9 +154,16 @@ with open("xThreat_data.json", "r") as fd:
 
 
 k = 0
-for filename in os.listdir("2023_worlds_replays"):
+for filename in os.listdir("analysis_replays"):
   try:
-     _json = carball.decompile_replay(os.path.join("C:/Users/User/Documents/carball-master/2023_worlds_replays", filename))
+     ps_command = "rrrocket.exe -n " + os.path.join("C:/Users/User/Documents/carball-master/analysis_replays", filename)
+     command = ["powershell", "-Command", ps_command]
+
+     # Run the command and capture the output
+     result = subprocess.run(command, capture_output=True, text=True)
+
+     # Convert the output from string to JSON
+     _json = json.loads(result.stdout)
 
      # _json is a JSON game object (from decompile_replay)
      game = Game()
@@ -219,11 +227,12 @@ for filename in os.listdir("2023_worlds_replays"):
            if player_hit == next_player_hit and zone_hit != next_zone_hit:
               last_hit = True
 
+
         # Was it the last hit?
         if last_hit:
            # See if player in player_data, if not, add in
            if player_hit not in player_data.keys():
-              player_data[player_hit] = {"goals":0, "xthreat_dif": [], "xthreat_dif_excl_goals": [], "games":[]}
+              player_data[player_hit] = {"team": find_team(hit["playerId"]["id"], teams), "goals":0, "xthreat_dif": [], "xthreat_dif_excl_goals": [], "games":[]}
 
            # Keep track of number of games player has played
            if k not in player_data[player_hit]["games"]:
@@ -254,7 +263,7 @@ for filename in os.listdir("2023_worlds_replays"):
        
      i += 1
   k += 1
-  print(str((k / len(os.listdir("2023_worlds_replays"))) * 100) + "%",  "of replays completed")
+  print(str((k / len(os.listdir("analysis_replays"))) * 100) + "%",  "of replays completed")
 
 with open("xthreat_players.json", "w") as fd:
   json.dump(player_data, fd, indent=3)

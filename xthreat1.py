@@ -150,10 +150,10 @@ event_data = create_event_dict()
 
 
 k = 0
-for filename in os.listdir("all_rlcs_replays"):
+for filename in os.listdir("training_data_replays"):
   try:
 
-    _json = carball.decompile_replay(os.path.join("C:/Users/User/Documents/carball-master/all_rlcs_replays", filename))
+    _json = carball.decompile_replay(os.path.join("C:/Users/User/Documents/carball-master/training_data_replays", filename))
 
     # _json is a JSON game object (from decompile_replay)
     game = Game()
@@ -240,7 +240,7 @@ for filename in os.listdir("all_rlcs_replays"):
        
      i += 1
   k += 1
-  print(str((k / len(os.listdir("all_rlcs_replays"))) * 100) + "%",  "of replays completed")
+  print(str((k / len(os.listdir("training_data_replays"))) * 100) + "%",  "of replays completed")
 
 with open("event_data.json", "w") as fd:
    json.dump(event_data, fd, indent=3)
